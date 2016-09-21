@@ -5,7 +5,7 @@ public class TFTPServer extends UDPParent{ //While this class is the main class,
 	private DatagramSocket requestListenerSocket; //This is going to be bound to port 69, it's the TFTP request listener and only accepts RRQ/WRQ packets
 	
 	public TFTPServer(){ 
-			try { create the listenerSocket on port 69
+			try { //create the listenerSocket on port 69
 				requestListenerSocket=new DatagramSocket(69);
 			} catch (SocketException e){
 				System.out.println("Socket creation failed");
@@ -20,18 +20,17 @@ public class TFTPServer extends UDPParent{ //While this class is the main class,
 		//TODO listen on requestListenerSocket
 		
 		while(true){
-				boolean packetReceivedFlag=true;
-				try{
-					DatagramPacket requestPacket=receiveDatagram(requestListenerSocket);
-				} catch (SocketTimeoutException e){
-					packetReceivedFlag=false; //we timed out and didn't receive a packet, current datagrampacket saved is old
-				}
-				if (packetReceivedFlag) { //if there's a valid request on requestListenerSocket
-					//do stuff
-				} else {
-					//check if we're supposed to shut down
-				}
+			boolean packetReceivedFlag=true;
+			try{
+				DatagramPacket requestPacket=receiveDatagram(requestListenerSocket);
+			} catch (SocketTimeoutException e){
+				packetReceivedFlag=false; //we timed out and didn't receive a packet, current datagrampacket saved is old
+			}
+			if (packetReceivedFlag) { //if there's a valid request on requestListenerSocket
+				//do stuff
+			} else {
+				//check if we're supposed to shut down
+			}
 		}
 	}
-	
 }

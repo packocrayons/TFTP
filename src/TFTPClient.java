@@ -1,5 +1,5 @@
 import java.net.*;
 
-public class TFTPClient {
+public class TFTPClient extends UDPParent{
 
 }
