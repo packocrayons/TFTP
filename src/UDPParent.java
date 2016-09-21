@@ -5,6 +5,16 @@ import java.net.InetAddress;
 
 public class UDPParent { //this class has the majority of the methods for actually working with UDP packets, the client, server (and maybe error sim) will extend these
 	
+	private boolean verbose;
+
+	public UDPParent(){
+		verbose=false
+	}
+
+	public void setVerbosity(boolean verb){
+		verbose=verb;
+	}
+
 	public DatagramPacket generateDatagram(byte[] byteArray, InetAddress IPaddress, int portNumber){ 
 		//this method really doesn't do much, however it makes code readable and may do more later
 		DatagramPacket packetToSend;
@@ -35,6 +45,10 @@ public class UDPParent { //this class has the majority of the methods for actual
 			e.printStackTrace();
 		}
 		return p;
+	}
+
+	public void v(String s){	//This prints the string if the program is in verbose mode
+		if (verbose) System.out.println(s); 
 	}
 
 }
