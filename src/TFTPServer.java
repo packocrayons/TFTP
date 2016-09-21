@@ -21,13 +21,14 @@ public class TFTPServer extends UDPParent{ //While this class is the main class,
 		
 		while(true){
 			boolean packetReceivedFlag=true;
+			DatagramPacket requestPacket;
 			try{
-				DatagramPacket requestPacket=receiveDatagram(requestListenerSocket);
+				requestPacket=receiveDatagram(requestListenerSocket);
 			} catch (SocketTimeoutException e){
 				packetReceivedFlag=false; //we timed out and didn't receive a packet, current datagrampacket saved is old
 			}
 			if (packetReceivedFlag) { //if there's a valid request on requestListenerSocket
-				//do stuff
+				new Thread(new TFTPTransferHandler(requestPacket)); //create a thread to handle this request packet
 			} else {
 				//check if we're supposed to shut down
 			}
