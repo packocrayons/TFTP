@@ -25,11 +25,11 @@ public class TFTPServer extends UDPParent{ //While this class is the main class,
 			try{
 				requestPacket=receiveDatagram(requestListenerSocket);
 			} catch (SocketTimeoutException e){
-				packetReceivedFlag=false; //we timed out and didn't receive a packet, current datagrampacket saved is old
+				packetReceivedFlag=false; //we timed out and didn't receive a packet, current datagrampacket saved is not valid to use this loop
 			}
-			if (packetReceivedFlag) { //if there's a valid request on requestListenerSocket
+			if (packetReceivedFlag && validateRequestPacket(requestPacket)) { //if there's a valid request on requestListenerSocket
 				new Thread(new TFTPTransferHandler(requestPacket)); //create a thread to handle this request packet
-			} else {
+			} else {		
 				//check if we're supposed to shut down
 			}
 		}
