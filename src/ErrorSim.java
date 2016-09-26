@@ -21,16 +21,17 @@ public class ErrorSim extends UDPParent{
 	}
 
 	public static void main(String[] args){
-		InetAddress localHost = InetAddress.getLocalHost();
+		ErrorSim errSim = new ErrorSim();
 		while(true){ //always do this
-			v("Waiting to receive a Datagram on port 23, timeout of " + port23Socket.getSoTimeout()); //TODO not sure if getSOTimeout is the right functoin - check the API
-			try{
-				passthroughPacket = receiveDatagram(port23Socket); //listen for the client to generate a request
-			} catch(Timeoutexception??? e){ //TODO not sure what the actual timeout exception is - check this when online
-				v("Did not receive a request packet from the client");				
+			try {
+				errSim.v("Waiting to receive a Datagram on port 23, timeout of " + errSim.port23Socket.getSoTimeout());
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			passthroughPacket = generateDatagram(passthroughPacket.getData(), localHost, 69); //forward the packet to the server
-			sendDatagram(passthroughPacket.getData(), serverConnectionSocket);
+			errSim.passthroughPacket = errSim.receiveDatagram(errSim.port23Socket); //listen for the client to generate a request
+			errSim.passthroughPacket = errSim.generateDatagram(errSim.passthroughPacket.getData(), errSim.IPAddress, 69); //forward the packet to the server
+			errSim.sendDatagram(errSim.passthroughPacket, errSim.serverConnectionSocket);
 			//we either forwarded a packet or 
 		}
 	}

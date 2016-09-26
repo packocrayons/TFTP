@@ -12,22 +12,25 @@ public class TFTPServer extends UDPParent{ //While this class is the main class,
 				e.printStackTrace();
 				return;
 			}
-			requestListenerSocket.setSoTimeout(2000); //this socket times out after 2 seconds to see if we should shut down
+			try {
+				requestListenerSocket.setSoTimeout(2000);
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} //this socket times out after 2 seconds to see if we should shut down
 	}
 	
 	
 	public static void main(String[] args){
 		//TODO listen on requestListenerSocket
 		
+		TFTPServer server = new TFTPServer();
+		
 		while(true){
 			boolean packetReceivedFlag=true;
 			DatagramPacket requestPacket;
-			try{
-				requestPacket=receiveDatagram(requestListenerSocket);
-			} catch (SocketTimeoutException e){
-				packetReceivedFlag=false; //we timed out and didn't receive a packet, current datagrampacket saved is not valid to use this loop
-			}
-			if (packetReceivedFlag && validateRequestPacket(requestPacket)) { //if there's a valid request on requestListenerSocket
+			requestPacket=server.receiveDatagram(server.requestListenerSocket);
+			if (packetReceivedFlag && server.validateRequestPacket(requestPacket.getData())) { //if there's a valid request on requestListenerSocket
 				new Thread(new TFTPTransferHandler(requestPacket)); //create a thread to handle this request packet
 			} else {		
 				//check if we're supposed to shut down

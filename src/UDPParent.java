@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.awt.*;
 import javax.swing.*;
 
@@ -9,9 +10,16 @@ public class UDPParent { //this class has the majority of the methods for actual
 	
 	private boolean verbose;
 	private JTextArea textArea,textArea2;//we should append to theses Areas rather than printing to console
+	protected InetAddress IPAddress;
 
 	public UDPParent(){
 		verbose=false;
+		try {
+			IPAddress = InetAddress.getLocalHost(); //Just for now, all the code is running on the same physical address.
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void setVerbosity(boolean verb){
@@ -52,6 +60,10 @@ public class UDPParent { //this class has the majority of the methods for actual
 
 	public void v(String s){	//This prints the string if the program is in verbose mode
 		if (verbose) System.out.println(s); 
+	}
+	
+	public boolean v(){
+		return verbose;
 	}
 	
 	public void createGui(){//for outputting the messages between server and client
@@ -107,7 +119,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		if(byteArray[1] != 1 && byteArray[1] != 2) return false;
 		int i = 0;
 		for (; (i < byteArray.length) && (byteArray[i] != 0); i++) //exit when you hit the end or you find a zero
-		if (i = byteArray.length - 1) return false; //otherwise i points to the zero in the bytearray, if the next char is 0, it's invalid, otherwise we assume it's valid
+		if (i == byteArray.length - 1) return false; //otherwise i points to the zero in the bytearray, if the next char is 0, it's invalid, otherwise we assume it's valid
 		if(byteArray[i+1] == 0) return false;
 		return true; //packet passed all tests, it is a valid request packet
 	}
