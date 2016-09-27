@@ -10,9 +10,9 @@ public class ErrorSim extends UDPParent{
 		try{
 			port23Socket = new DatagramSocket(23);
 			port23Socket.setSoTimeout(5000); //wait for 5 seconds on the client to create requests
-			clientReplySocket= new DatagramSocket();
+			clientReplySocket= new DatagramSocket(); //this is what the client thinks is the 'ad-hoc' port run from another server thread, but we handle that on the error sim
 			clientReplySocket.setSoTimeout(2000);
-			serverConnectionSocket= new DatagramSocket()
+			serverConnectionSocket= new DatagramSocket(); //this socket is used for all server communication
 			serverConnectionSocket.setSoTimeout(2000);
 		} catch(SocketException e){
 			e.printStackTrace();
@@ -23,9 +23,15 @@ public class ErrorSim extends UDPParent{
 	public static void main(String[] args){
 		InetAddress localHost = InetAddress.getLocalHost();
 		while(true){ //always do this
-			passthroughPacket = receiveDatagram(port23Socket); //listen for the client to generate a request
+			v("Waiting to receive a Datagram on port 23, timeout of " + port23Socket.getSoTimeout()); //TODO not sure if getSOTimeout is the right functoin - check the API
+			try{
+				passthroughPacket = receiveDatagram(port23Socket); //listen for the client to generate a request
+			} catch(Timeoutexception??? e){ //TODO not sure what the actual timeout exception is - check this when online
+				v("Did not receive a request packet from the client");				
+			}
 			passthroughPacket = generateDatagram(passthroughPacket.getData(), localHost, 69); //forward the packet to the server
-			sendDatagram()
+			sendDatagram(passthroughPacket.getData(), serverConnectionSocket);
+			//we either forwarded a packet or 
 		}
 	}
 
