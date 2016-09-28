@@ -26,6 +26,39 @@ public class UDPParent { //this class has the majority of the methods for actual
 		verbose=verb;
 	}
 
+	public byte[] createDataBlock(byte[] data, int blockNumber){
+		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
+		byte[] dataBlock = new byte[data.length + blockNum.length + 2];
+		datablock[0] = 0;
+		datablock[1] = 3; //03 means data
+		System.arrayCopy(blockNum, 2, dataBlock, 2, blockNum.length - 2);
+		System.arrayCopy(data, 0, dataBlock, 4, dataBlock.length); //copy the arrays into one big array
+		return dataBlock;
+	}
+
+
+	public DatagramPacket generateAckDatagram(boolean write, int portNumber, int blockNumber){
+		byte[blockNum] = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
+
+		byte[] response = new byte[4];
+
+		response[0] = 0;
+		response[1] = 4;
+		response[2] = blockNum[2];
+		response[3] = blocknum[3]; //there are only two bits so use the two least significant bits
+
+		DatagramPacket packetToSend;
+		try {
+			packetToSend = new DatagramPacket(response, response.length, InetAddress.getLocalHost(), portNumber); //Send it back to whatever port the intermediate sent to us on
+		} catch (UnknownHostException e) {
+			System.out.println("DatagramPacket creation failed");
+			e.printStackTrace();
+			return null;
+		}
+		return packetToSend;
+	}
+
+
 	public DatagramPacket generateDatagram(byte[] byteArray, InetAddress IPaddress, int portNumber){ 
 		//this method really doesn't do much, however it makes code readable and may do more later
 		DatagramPacket packetToSend;
