@@ -5,18 +5,19 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.awt.*;
 import javax.swing.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream;
 
 public class UDPParent { //this class has the majority of the methods for actually working with UDP packets, the client, server (and maybe error sim) will extend these
-	
+	private Byte[] byteFile;
 	private boolean verbose;
-	private JTextArea textArea,textArea2;//we should append to theses Areas rather than printing to console
+	private static JTextArea textArea;
 	protected InetAddress IPAddress;
 	private BufferedArrayInputStream in;
 	private BufferedOutputStream out;
 
-	public static void print(String arg){
-		//ROBERT - this is a passthrough function at the moment, and is only here to replace System.out.println ot print to the gui, idk how it works
-		UDPParent.print(arg);
+	public void print(String arg){//Method used to print to GUI, not required in I1
+		textArea.append(arg);
 	}
 
 	public UDPParent(){
@@ -110,22 +111,16 @@ public class UDPParent { //this class has the majority of the methods for actual
 		JFrame frame = new JFrame();
 		frame.setSize(500,500);
 		textArea = new JTextArea();
-		textArea2 = new JTextArea();
-		JScrollPane scroll=new JScrollPane(textArea2);
-		scroll.setPreferredSize(new Dimension(250,250));
-		JScrollPane scroll2 = new JScrollPane(textArea);
-		scroll2.setPreferredSize(new Dimension(250,250));
 		
-		frame.add(scroll,BorderLayout.SOUTH);
-		frame.add(scroll2,BorderLayout.CENTER);
+		JScrollPane scroll=new JScrollPane(textArea);
+		scroll.setPreferredSize(new Dimension(500,500));
+		
+		frame.add(scroll);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		textArea.append("textArea==TOP");
-		textArea2.append("textArea2==BOT");
-		
 		textArea.setEditable(false);
-		textArea2.setEditable(false);
+		
 	}
 	public void prompt(){
 		//quiet,verbose
@@ -172,30 +167,33 @@ public class UDPParent { //this class has the majority of the methods for actual
 	}
 
 	public static void printDatagram(DatagramPacket p){
-		UDPParent.print("Datagram exists, metadata follows");                          // All this code is just printing the datagram info
-		UDPParent.print("Packet sent to : " + p.getAddress());
-		UDPParent.print("Sent to port : " + p.getPort());
-		UDPParent.("Byte array contained in packet: ");
+		System.out.println("Datagram exists, metadata follows");// All this code is just printing the datagram info
+		System.out.println("Packet sent to : " + p.getAddress());
+		System.out.println("Sent to port : " + p.getPort());
+		System.out.println("Byte array contained in packet: ");
 		byte[] buf = p.getData();
 		for (int i = 0; i < buf.length; ++i){
-			System.out.printf("0x%02X ", buf[i]); //ROBERT - not sure what to do about printf, is it supported by the GUI? can't use println for the byte array
+			System.out.printf("0x%02X ", buf[i]); //For now the method will print to console
 		}
-		UDPParent.print("");
+		
+		System.out.println("");
 		String data = new String(buf);
-		UDPParent.print("Data as a string: " + data);
+		System.out.println("Data as a string: " + data);
 	}
-
-	public readFile(String file){//Param:input file name
+	
+	
+	public void readFile(String file){//Param:input file name
 		in = new BufferedInputStream(new FileInputStream(file));
-		Byte[] byteFile = new byte[512];
+		byteFile = new byte[512];
 		while(in.read(byteFile, 0, 512) != -1){
 		}
 	}
 	
-	public writeFile(String file,Byte[] contents){//param: Output file name, byte array used to write
+	public void writeFile(String file,Byte[] contents){//param: Output file name, byte array used to write
 		out = new BufferedOutputStream(new FileOutputStream(file));
 		out.write(contents,0,512);//writting in lengths of 512
 		
 	}
+
 
 }
