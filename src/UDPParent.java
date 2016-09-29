@@ -11,6 +11,8 @@ public class UDPParent { //this class has the majority of the methods for actual
 	private boolean verbose;
 	private JTextArea textArea,textArea2;//we should append to theses Areas rather than printing to console
 	protected InetAddress IPAddress;
+	private BufferedArrayInputStream in;
+	private BufferedOutputStream out;
 
 	public static void print(String arg){
 		//ROBERT - this is a passthrough function at the moment, and is only here to replace System.out.println ot print to the gui, idk how it works
