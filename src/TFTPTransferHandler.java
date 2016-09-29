@@ -3,10 +3,13 @@ import java.net.*;
 public class TFTPTransferHandler extends UDPParent implements Runnable{
 
 	private DatagramSocket transferSocket; //This is the socket that all the TFTP traffic will travel over
-
-	DatagramPacket clientRequestPacket; //this packet is going to be broken down so we know what IP and port to send our response to, this is only in the constructor
+	
+	private DatagramPacket clientRequestPacket; //this packet is going to be broken down so we know what IP and port to send our response to, this is only in the constructor
 	String filename;
 	boolean reading; //this is set to true if the client wants to read a file from us
+	
+	private BufferedArrayInputStream in;
+	private BufferedOutputStream out;
 
 	public TFTPTransferHandler(DatagramPacket receivedPacket){ //swe're going to break down the packet and get info
 		clientRequestPacket=receivedPacket;
@@ -67,7 +70,19 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 			//The client wants to write a file, all we do is listen and send acknowledgement (I don't know if ack is part of assignment 1?)
 			//SOMEBODY fill this with write request code, put 512 byte blocks in a file and send ack packets
 		}
-
+	}
+	
+	public readFile(String file){//Param:input file name
+		in = new BufferedInputStream(new FileInputStream(file));
+		Byte[] byteFile = new byte[512];
+		while(in.read(byteFile, 0, 512) != -1){
+		}
+	}
+	
+	public writeFile(String file,Byte[] contents){//param: Output file name, byte array used to write
+		out = new BufferedOutputStream(new FileOutputStream(file));
+		out.write(contents,0,512);//writting in lengths of 512
+		
 	}
 	
 }
