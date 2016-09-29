@@ -18,8 +18,4 @@ public class TFTPClient extends UDPParent{
 		returnArray.add("octet".getBytes()); //it doesn't matter for this course, therefore we just make an assumption, this can easily be changed by passing it to the function
 		returnArray.add(0);
 	}
-
-	
-
-	
 }
