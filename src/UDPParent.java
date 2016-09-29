@@ -182,8 +182,8 @@ public class UDPParent { //this class has the majority of the methods for actual
 	}
 	
 	
-	public void readFile(String file){//Param:input file name
-		in = new BufferedInputStream(new FileInputStream(file));
+	public void readFile(String file){//Param:input file name //Shouldn't this return a byte array of size 512 or less?
+		in = new BufferedInputStream(new FileInputStream(file)); 
 		byteFile = new byte[512];
 		while(in.read(byteFile, 0, 512) != -1){
 		}
