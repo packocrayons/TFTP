@@ -183,5 +183,17 @@ public class UDPParent { //this class has the majority of the methods for actual
 		UDPParent.print("Data as a string: " + data);
 	}
 
+	public readFile(String file){//Param:input file name
+		in = new BufferedInputStream(new FileInputStream(file));
+		Byte[] byteFile = new byte[512];
+		while(in.read(byteFile, 0, 512) != -1){
+		}
+	}
+	
+	public writeFile(String file,Byte[] contents){//param: Output file name, byte array used to write
+		out = new BufferedOutputStream(new FileOutputStream(file));
+		out.write(contents,0,512);//writting in lengths of 512
+		
+	}
 
 }
