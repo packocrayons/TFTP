@@ -11,7 +11,7 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 	private BufferedArrayInputStream in;
 	private BufferedOutputStream out;
 
-	public TFTPTransferHandler(DatagramPacket receivedPacket){ //swe're going to break down the packet and get info
+	public TFTPTransferHandler(DatagramPacket receivedPacket){ //we're going to break down the packet and get info
 		clientRequestPacket=receivedPacket;
 		try { //create the transferSocket on random port
 			transferSocket=new DatagramSocket();
@@ -71,18 +71,4 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 			//SOMEBODY fill this with write request code, put 512 byte blocks in a file and send ack packets
 		}
 	}
-	
-	public readFile(String file){//Param:input file name
-		in = new BufferedInputStream(new FileInputStream(file));
-		Byte[] byteFile = new byte[512];
-		while(in.read(byteFile, 0, 512) != -1){
-		}
-	}
-	
-	public writeFile(String file,Byte[] contents){//param: Output file name, byte array used to write
-		out = new BufferedOutputStream(new FileOutputStream(file));
-		out.write(contents,0,512);//writting in lengths of 512
-		
-	}
-	
 }
