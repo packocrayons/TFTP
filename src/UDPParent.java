@@ -12,6 +12,11 @@ public class UDPParent { //this class has the majority of the methods for actual
 	private JTextArea textArea,textArea2;//we should append to theses Areas rather than printing to console
 	protected InetAddress IPAddress;
 
+	public static void print(String arg){
+		//ROBERT - this is a passthrough function at the moment, and is only here to replace System.out.println ot print to the gui, idk how it works
+		UDPParent.print(arg);
+	}
+
 	public UDPParent(){
 		verbose=false;
 		try {
@@ -26,7 +31,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		verbose=verb;
 	}
 
-	public byte[] createDataBlock(byte[] data, int blockNumber){
+	public byte[] generateDataBlock(byte[] data, int blockNumber){
 		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
 		byte[] dataBlock = new byte[data.length + blockNum.length + 2];
 		datablock[0] = 0;
@@ -38,7 +43,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 
 
 	public DatagramPacket generateAckDatagram(boolean write, int portNumber, int blockNumber){
-		byte[blockNum] = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
+		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
 
 		byte[] response = new byte[4];
 
@@ -51,7 +56,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		try {
 			packetToSend = new DatagramPacket(response, response.length, InetAddress.getLocalHost(), portNumber); //Send it back to whatever port the intermediate sent to us on
 		} catch (UnknownHostException e) {
-			System.out.println("DatagramPacket creation failed");
+			UDPParent.print("DatagramPacket creation failed");
 			e.printStackTrace();
 			return null;
 		}
@@ -71,7 +76,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		try {
 			socketToUse.send(packetToSend);
 		} catch (IOException e) {
-			System.out.println("Sending the packet failed");
+			UDPParent.print("Sending the packet failed");
 			e.printStackTrace();
 			return false;
 		}
@@ -85,14 +90,14 @@ public class UDPParent { //this class has the majority of the methods for actual
 		try {
 			socketToUse.receive(p);
 		} catch (IOException e) {
-			System.out.println("Receiving from the port failed");
+			UDPParent.print("Receiving from the port failed");
 			e.printStackTrace();
 		}
 		return p;
 	}
 
 	public void v(String s){	//This prints the string if the program is in verbose mode
-		if (verbose) System.out.println(s); 
+		if (verbose) UDPParent.print(s); 
 	}
 	
 	public boolean v(){
@@ -157,18 +162,25 @@ public class UDPParent { //this class has the majority of the methods for actual
 		return true; //packet passed all tests, it is a valid request packet
 	}
 
+	public boolean validateACKPacket(byte[] byteArray, int blockNumber){
+		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
+		if (byteArray[0] == 0 && byteArray[1] == 1 && byteArray[2] == blockNum[2] && byteArray[3] == blockNum[3]){
+			return true;
+		} else return false;
+	}
+
 	public static void printDatagram(DatagramPacket p){
-		System.out.println("Datagram exists, metadata follows");                          // All this code is just printing the datagram info
-		System.out.println("Packet sent to : " + p.getAddress());
-		System.out.println("Sent to port : " + p.getPort());
-		System.out.print("Byte array contained in packet: ");
+		UDPParent.print("Datagram exists, metadata follows");                          // All this code is just printing the datagram info
+		UDPParent.print("Packet sent to : " + p.getAddress());
+		UDPParent.print("Sent to port : " + p.getPort());
+		UDPParent.("Byte array contained in packet: ");
 		byte[] buf = p.getData();
 		for (int i = 0; i < buf.length; ++i){
-			System.out.printf("0x%02X ", buf[i]);
+			System.out.printf("0x%02X ", buf[i]); //ROBERT - not sure what to do about printf, is it supported by the GUI? can't use println for the byte array
 		}
-		System.out.println("");
+		UDPParent.print("");
 		String data = new String(buf);
-		System.out.println("Data as a string: " + data);
+		UDPParent.print("Data as a string: " + data);
 	}
 
 
