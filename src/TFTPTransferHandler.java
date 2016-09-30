@@ -40,7 +40,9 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 			byte[] data;
 			DatagramPacket dataPacket, ackPacket;
 			//data[] = fetch512Bytes //SURVESH/ADAM - this is where your code will be called
+
 			for (int blockNum = 1; data.length > 512, i++){ /*while data[].length is greater than 512*/
+				
 				//data[] = fetch512Bytes //SURVESH/ADAM same thing here
 				data = generateDataBlock(data, i); //create the block with the block number
 				dataPacket = generateDatagram(data, IPAddress, clientPort); //generate the datagram
