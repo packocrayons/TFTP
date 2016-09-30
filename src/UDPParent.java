@@ -45,7 +45,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 	}
 
 
-	public DatagramPacket generateAckDatagram(boolean write, int portNumber, int blockNumber){
+	public DatagramPacket generateAckDatagram(int portNumber, int blockNumber){
 		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
 
 		byte[] response = new byte[4];
@@ -161,9 +161,14 @@ public class UDPParent { //this class has the majority of the methods for actual
 
 	public boolean validateACKPacket(byte[] byteArray, int blockNumber){
 		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
-		if (byteArray[0] == 0 && byteArray[1] == 1 && byteArray[2] == blockNum[2] && byteArray[3] == blockNum[3]){
-			return true;
-		} else return false;
+		if (byteArray[0] == 0 && byteArray[1] == 1 && byteArray[2] == blockNum[2] && byteArray[3] == blockNum[3]) return true;
+		return false;
+	}
+
+	public boolean validateDataPacket(byte[] byteArray, int blockNumber){
+		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
+		if (byteArray[0] == 0 && byteArray[1] == 3 && byteArray[2] == blockNum[2] && byteArray[3] == blockNum[3]){ return true;//data
+		return false;
 	}
 
 	public static void printDatagram(DatagramPacket p){
