@@ -27,9 +27,9 @@ public class TFTPClient extends UDPParent{
 
 	public static void main(String[] args){
 		TFTPClient client = new TFTPClient();
-		//ROBERT - there's going to be a gui here for making read/write requests
-		if (/*readRequest*/){
-			String filename; /*= filename from gui*/
+		client.promptRequest();//a gui here for making read/write requests
+		if (client.getReadRequest()==true){//read req.
+			String filename=client.getReadFileName(); /*= filename from gui*/
 
 			byte[] requestArray = client.createRequestBlock(true, filename);
 			DatagramPacket requestPacket = client.generateDatagram(requestArray, client.IPAddress, 23);
