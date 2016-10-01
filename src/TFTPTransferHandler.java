@@ -10,7 +10,7 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 	
 	
 
-	public TFTPTransferHandler(DatagramPacket receivedPacket){ //we're going to break down the packet and get info
+	public void TFTPTransferHandler(DatagramPacket receivedPacket){ //we're going to break down the packet and get info
 		clientRequestPacket=receivedPacket;
 		try { //create the transferSocket on random port
 			transferSocket=new DatagramSocket();
