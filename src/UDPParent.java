@@ -12,12 +12,11 @@ import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 
 public class UDPParent { //this class has the majority of the methods for actually working with UDP packets, the client, server (and maybe error sim) will extend these
-	private byte[] byteFile;
+	
 	private boolean verbose;
 	private static JTextArea textArea;
 	protected InetAddress IPAddress;
-	private BufferedInputStream in;
-	private BufferedOutputStream out;
+
 	private boolean readRequest,writeRequest=false;
 	private String readFileName,writeFileName;
 	
@@ -192,14 +191,14 @@ public class UDPParent { //this class has the majority of the methods for actual
 		String data = new String(buf);
 		System.out.println("Data as a string: " + data);
 	}
-	public byte[] readFile(String file){//Param:input file name //Shouldn't this return a byte array of size 512 or less?
+	public byte[] readFile(String file){//Param:input file name 
 		try {
-			in = new BufferedInputStream(new FileInputStream(file));
+			BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println("error");
 		} 
-		byteFile = new byte[512];
+		byte[] byteFile = new byte[512];
 		try {
 			while(in.read(byteFile, 0, 512) != -1){
 			}
@@ -212,7 +211,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 	
 	public void writeFile(String file,byte[] contents){//param: Output file name, byte array used to write
 		try {
-			out = new BufferedOutputStream(new FileOutputStream(file));
+			BufferedOutputStream out  = new BufferedOutputStream(new FileOutputStream(file));
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println("error");
