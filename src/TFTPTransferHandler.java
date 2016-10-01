@@ -39,7 +39,8 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 			int clientPort = clientRequestPacket.getPort(); //this is actually the port from the intermediate but we don't care, we're just responding to whoever asked us
 			byte[] data;
 			DatagramPacket dataPacket, ackPacket;
-			//data[] = fetch512Bytes //SURVESH/ADAM - this is where your code will be called
+			data=UDPParent.readFile(UDPParent.getReadFileName()); //data[] = fetch512Bytes /neither getReadFileName() or readFile() are static,
+			//do you want to change them to static or pass a new UDPParent
 
 			for (int blockNum = 1; data.length > 512, i++){ /*while data[].length is greater than 512*/
 				
