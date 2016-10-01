@@ -227,7 +227,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 	}
 	
 	
-	public String promptRequest(){
+	public void promptRequest(){
 		
 				Object[] choices = {"Read Request","Write Request"};
 				
@@ -241,7 +241,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 					setWriteRequest(true);
 				}
 		
-		return readFileName;
+		
 	}//promptRequest
 	
 	
