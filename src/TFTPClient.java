@@ -51,11 +51,11 @@ public class TFTPClient extends UDPParent{
 			DatagramPacket dataPacket, ackPacket;
 			dataPacket = client.generateDatagram(data, client.IPAddress, 23); //send to the intermediate host (we think it's the server)
 			client.sendDatagram(dataPacket, clientSocket); //send the datagram over our socket
-			//data[] = fetch512Bytes //SURVESH/ADAM - this is where your code will be called
+			data= client.readFile(client.getReadFileName());//
 			ackPacket = receiveDatagram(clientSocket); //wait for the server to ack this request
 			if (!client.validateACKPacket(ackPacket.getBytes(), 0)) return; //ITERATION2
 
-			//data[] = readfile //SURVESH/ADAM syntax here, not sure if the function call is complete yet
+			data= client.readFile(client.getReadFileName());//Not sure if you want to read to data again or just make a new array
 			for (int blockNum = 1; data.length > 512, i++){ /*while data[].length is greater than 512*/
 				
 				data = generateDataBlock(data, i); //create the block with the block number
