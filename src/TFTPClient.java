@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class TFTPClient extends UDPParent{
 
-	DatagramSocket clientSocket;
+	public DatagramSocket clientSocket;
 
 	public TFTPClient(){
 		try {
