@@ -192,7 +192,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		String data = new String(buf);
 		System.out.println("Data as a string: " + data);
 	}
-	public readFile(String file){//Param:input file name //Shouldn't this return a byte array of size 512 or less?
+	public byte[] readFile(String file){//Param:input file name //Shouldn't this return a byte array of size 512 or less?
 		try {
 			in = new BufferedInputStream(new FileInputStream(file));
 		} 
