@@ -192,7 +192,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		String data = new String(buf);
 		System.out.println("Data as a string: " + data);
 	}
-	public void readFile(String file){//Param:input file name //Shouldn't this return a byte array of size 512 or less?
+	public byte[] readFile(String file){//Param:input file name //Shouldn't this return a byte array of size 512 or less?
 		try {
 			in = new BufferedInputStream(new FileInputStream(file));
 		} 
@@ -207,6 +207,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		catch (IOException e) {
 			System.out.println("error");
 		}
+		return byteFile;
 	}
 	
 	public void writeFile(String file,byte[] contents){//param: Output file name, byte array used to write
