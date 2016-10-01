@@ -18,6 +18,9 @@ public class UDPParent { //this class has the majority of the methods for actual
 	protected InetAddress IPAddress;
 	private BufferedInputStream in;
 	private BufferedOutputStream out;
+	private boolean readRequest,writeRequest=false;
+	private String readFileName,writeFileName;
+	
 
 	public void print(String arg){//Method used to print to GUI, not required in I1
 		textArea.append(arg);
@@ -221,6 +224,52 @@ public class UDPParent { //this class has the majority of the methods for actual
 			System.out.println("error");
 		}
 		
+	}
+	
+	
+	public String promptRequest(){
+		
+				Object[] choices = {"Read Request","Write Request"};
+				
+				Object selectedValue = JOptionPane.showInputDialog(null,"Select one","input",JOptionPane.INFORMATION_MESSAGE,null,choices,choices[0]);	
+				if(selectedValue == "Read Request"){
+					readFileName = JOptionPane.showInputDialog("Please input a filename");
+					setReadRequest(true);
+				}
+				else{//write request
+					writeFileName= JOptionPane.showInputDialog("Please input a filename");
+					setWriteRequest(true);
+				}
+		
+		return readFileName;
+	}//promptRequest
+	
+	
+	
+	
+	
+	public String getReadFileName(){
+		return readFileName;
+		
+	}
+	public String getWriteFileName(){
+		return writeFileName;
+	}
+
+	public boolean getWriteRequest() {
+		return writeRequest;
+	}
+
+	public void setWriteRequest(boolean writeRequest) {
+		this.writeRequest = writeRequest;
+	}
+
+	public boolean getReadRequest() {
+		return readRequest;
+	}
+
+	public void setReadRequest(boolean readRequest) {
+		this.readRequest = readRequest;
 	}
 
 
