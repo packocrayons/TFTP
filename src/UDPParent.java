@@ -255,14 +255,10 @@ public class UDPParent { //this class has the majority of the methods for actual
 		
 	}//promptRequest
 	
-	
-	
-	
-	
 	public String getReadFileName(){
 		return readFileName;
-		
 	}
+	
 	public String getWriteFileName(){
 		return writeFileName;
 	}
