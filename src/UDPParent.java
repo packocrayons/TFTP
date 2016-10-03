@@ -17,10 +17,10 @@ public class UDPParent { //this class has the majority of the methods for actual
 	private boolean verbose;
 	private static JTextArea textArea;
 	protected InetAddress IPAddress;
-
 	private boolean readRequest,writeRequest=false;
 	private String readFileName,writeFileName;
-	
+	private BufferedOutputStream out;
+	private BufferedInputStream in;
 
 	public void print(String arg){//Method used to print to GUI, not required in I1
 		textArea.append(arg);
@@ -151,7 +151,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 				else{
 					setVerbosity(false);
 				}
-				if(selectedValue == "Test"){
+				if(selectedValue2 == "Test"){
 						//Do something
 				}
 				else{//Running in Normal mode
@@ -204,7 +204,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 	}
 	public byte[] readFile(String file){//Param:input file name 
 		try {
-			BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+			in = new BufferedInputStream(new FileInputStream(file));
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println("error");
@@ -222,7 +222,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 	
 	public void writeFile(String file,byte[] contents){//param: Output file name, byte array used to write
 		try {
-			BufferedOutputStream out  = new BufferedOutputStream(new FileOutputStream(file));
+			out  = new BufferedOutputStream(new FileOutputStream(file));
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println("error");

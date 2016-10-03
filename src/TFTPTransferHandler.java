@@ -32,48 +32,60 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 		//This is like the main() method for this server, it's what's called when a thread is spawned
 		v("TFTPHandler : thread spawned, printing request packet");
 		if (v()){ //printing datagrams should only be done in verbose mode, but since it's a print function we can't use v(String arg)
+			
 			UDPParent.printDatagram(clientRequestPacket);
 		}
 
 		if (isReadRequest(clientRequestPacket)){
+			int i = 0;
+			UDPParent tempParent = new UDPParent();
 			int clientPort = clientRequestPacket.getPort(); //this is actually the port from the intermediate but we don't care, we're just responding to whoever asked us
 			byte[] data;
 			DatagramPacket dataPacket, ackPacket;
-			data=UDPParent.readFile(UDPParent.getReadFileName()); //data[] = fetch512Bytes /neither getReadFileName() or readFile() are static,
+			data=tempParent.readFile(tempParent.getReadFileName()); //data[] = fetch512Bytes /neither getReadFileName() or readFile() are static,
 			//do you want to change them to static or pass a new UDPParent
 
-			for (int blockNum = 1; data.length > 512, i++){ /*while data[].length is greater than 512*/
+			for (int blockNum = 1; data.length > 512; i++){ /*while data[].length is greater than 512*/
 				
 				data = generateDataBlock(data, i); //create the block with the block number
 				dataPacket = generateDatagram(data, IPAddress, clientPort); //generate the datagram
-				if v(){
-					UDPParent.print("Data packet generated");
-					UDPParent.printDatagram(dataPacket);
-				}
+				
+					if (v()){
+						tempParent.print("Data packet generated");
+						UDPParent.printDatagram(dataPacket);
+							}//end if
+					
 				sendDatagram(dataPacket, transferSocket);
-
 				ackPacket = receiveDatagram(transferSocket); //wait for the ACK packet
-				if (!validateACKPacket(ackPacket.getData(), blockNum)) return; //ACK was invalid - do something here in iteration 2 
-				//data[] = fetch512Bytes //SURVESH/ADAM same thing here
-			}
+				
+					if (!validateACKPacket(ackPacket.getData(), blockNum)){
+						return; //ACK was invalid - do something here in iteration 2 
+							}//end if
+				data=tempParent.readFile(tempParent.getReadFileName());
+				data = generateDataBlock(data, i); //create the block with the block number
+				dataPacket = generateDatagram(data, IPAddress, clientPort); //generate the datagram
+				
+				
+					if (v()){
+						tempParent.print("Data packet generated");
+						UDPParent.printDatagram(dataPacket);//Do everything one more time after the byte array < 512 bytes
+							}//end if
+				sendDatagram(dataPacket, transferSocket);
+				ackPacket = receiveDatagram(transferSocket); //wait for the ACK packet
+				
+					if (!validateACKPacket(ackPacket.getData(), blockNum)){
+						return; //ACK was invalid - do something here in iteration 2 
+							}//end if
 
-			data = generateDataBlock(data, i); //create the block with the block number
-			dataPacket = generateDatagram(data, IPAddress, clientPort); //generate the datagram
-			if v(){
-				UDPParent.print("Data packet generated");
-				UDPParent.printDatagram(dataPacket);										//Do everything one more time after the byte array < 512 bytes
-			}
-			sendDatagram(dataPacket, transferSocket);
-
-			ackPacket = receiveDatagram(transferSocket); //wait for the ACK packet
-			if (!validateACKPacket(ackPacket.getData(), blockNum)) return; //ACK was invalid - do something here in iteration 2 
-
-		} else {
+					else {
 			//The client wants to write a file, all we do is listen and send acknowledgement (I don't know if ack is part of assignment 1?)
 			//SOMEBODY fill this with write request code, put 512 byte blocks in a file and send ack packets//moved to TFTP Parent
-		}
-	}
+							}//end else
+				}//end for loop
 	
 	
 	
-}
+			}//end if
+	}//end run();
+}//end class
+

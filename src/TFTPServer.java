@@ -29,7 +29,7 @@ public class TFTPServer extends UDPParent{ //While this class is the main class,
 		while(true){
 			DatagramPacket requestPacket;
 			requestPacket=server.receiveDatagram(server.requestListenerSocket);
-			if (packetReceivedFlag && server.validateRequestPacket(requestPacket.getData())) { //if there's a valid request on requestListenerSocket
+			if (server.validateRequestPacket(requestPacket.getData())) { //if there's a valid request on requestListenerSocket
 				new Thread(new TFTPTransferHandler(requestPacket)); //create a thread to handle this request packet
 			} else {
 				//check if we're supposed to shut down

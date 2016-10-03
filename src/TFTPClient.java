@@ -41,6 +41,7 @@ public class TFTPClient extends UDPParent{
 	public static void main(String[] args){
 		TFTPClient client = new TFTPClient();
 		client.promptRequest();//a gui here for making read/write requests
+		client.prompt();
 		if (client.getReadRequest()==true){//read req.
 			String filename=client.getReadFileName(); /*= filename from gui*/
 
@@ -48,10 +49,13 @@ public class TFTPClient extends UDPParent{
 			DatagramPacket requestPacket = client.generateDatagram(requestArray, client.IPAddress, 23);
 			client.sendDatagram(requestPacket, client.clientSocket);
 			DatagramPacket serverReceivedPacket = client.receiveDatagram(client.clientSocket); //The server ACK packets are data packets, they just also function as an acknowledge
-			//SOMEBODY This needs verbosity in some places, see the server/ transferhandler for how it's done
+			
 
 			for (int blockNum = 1; serverReceivedPacket.getData().length > 512; blockNum++){
-				if (!client.validateDataPacket(serverReceivedPacket.getData(), 0)) return; // breaks if it's not valid
+				if (!client.validateDataPacket(serverReceivedPacket.getData(), 0)){
+					return; // breaks if it's not valid
+				}
+				
 				client.writeFile(filename, serverReceivedPacket.getData());
 				DatagramPacket ackPacket = client.generateAckDatagram(serverReceivedPacket.getPort(), blockNum); //generate the ack and wait for more data
 				client.sendDatagram(ackPacket, client.clientSocket);
@@ -68,7 +72,9 @@ public class TFTPClient extends UDPParent{
 			client.sendDatagram(dataPacket, client.clientSocket); //send the datagram over our socket
 			data= client.readFile(client.getReadFileName());//
 			ackPacket = client.receiveDatagram(client.clientSocket); //wait for the server to ack this request
-			if (!client.validateACKPacket(ackPacket.getData(), 0)) return; //ITERATION2
+			if (!client.validateACKPacket(ackPacket.getData(), 0)){
+				return; //ITERATION2
+			}
 
 			int serverPort = ackPacket.getPort();
 
