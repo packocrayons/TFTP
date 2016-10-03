@@ -6,7 +6,7 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 	
 	private DatagramPacket clientRequestPacket; //this packet is going to be broken down so we know what IP and port to send our response to, this is only in the constructor
 	
-	private boolean reading; //this is set to true if the client wants to read a file from us
+	//private boolean reading; //this is set to true if the client wants to read a file from us
 	
 	
 
@@ -61,6 +61,7 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 					if (!validateACKPacket(ackPacket.getData(), blockNum)){
 						return; //ACK was invalid - do something here in iteration 2 
 							}//end if
+							
 				data=tempParent.readFile(tempParent.getReadFileName());
 				data = generateDataBlock(data, i); //create the block with the block number
 				dataPacket = generateDatagram(data, IPAddress, clientPort); //generate the datagram

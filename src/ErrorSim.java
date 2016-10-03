@@ -1,6 +1,6 @@
 import java.net.*;
 
-public class ErrorSim extends UDPParent{
+public class ErrorSim extends UDPParent implements Runnable{
 	//we're going to have to pass on all the packets here
 
 	private DatagramSocket port23Socket, clientReplySocket, serverConnectionSocket; //socket that the client sends to, socket that we reply to the client with, socket to talk to the server
@@ -20,19 +20,25 @@ public class ErrorSim extends UDPParent{
 		}
 	}
 
-	public static void main(String[] args){
-		ErrorSim errSim = new ErrorSim();
+	public void run(){
 		while(true){ //always do this
 			try {
-				errSim.v("Waiting to receive a Datagram on port 23, timeout of " + errSim.port23Socket.getSoTimeout());
+				v("Waiting to receive a Datagram on port 23, timeout of " + port23Socket.getSoTimeout());
 			} catch (SocketException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			errSim.passthroughPacket = errSim.receiveDatagram(errSim.port23Socket); //listen for the client to generate a request
-			errSim.passthroughPacket = errSim.generateDatagram(errSim.passthroughPacket.getData(), errSim.IPAddress, 69); //forward the packet to the server
-			errSim.sendDatagram(errSim.passthroughPacket, errSim.serverConnectionSocket);
-			//we either forwarded a packet or 
+			passthroughPacket = receiveDatagram(port23Socket); //listen for the client to generate a request
+			int clientPort = passthroughPacket.getPort(); //so we know what port to respond on
+			passthroughPacket = generateDatagram(passthroughPacket.getData(), IPAddress, 69); //forward the packet to the server
+			sendDatagram(passthroughPacket, serverConnectionSocket);
+			//we just forwarded an ack packet, go into another loop and do the transfer.
+
+			//The only reason for this loop is because the packets that the client sent are going to a different port than the ack packet from the client
+			while (true){ //no condition - this loop will be broken in the catch block of a socket timeout
+				passthroughPacket = receiveDatagram(serverConnectionSocket); //the server knows to send here because that's where we sent the 'request' from
+				passthroughPacket = generateDatagram(passthroughPacket.getData(), IPAddress, clientPort); //forward the packet to the client
+
+			}
 		}
 	}
 
