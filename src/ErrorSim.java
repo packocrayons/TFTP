@@ -29,7 +29,7 @@ public class ErrorSim extends UDPParent implements Runnable{
 			}
 			passthroughPacket = receiveDatagram(port23Socket); //listen for the client to generate a request
 			int clientPort = passthroughPacket.getPort(); //so we know what port to respond on
-			passthroughPacket = generateDatagram(passthroughPacket.getData(), IPAddress, 69); //forward the packet to the server
+			passthroughPacket = generateDatagram(passthroughPacket.getData(), IPAddress, 69); //forward the packet to the server. ALWAYS go to 69 here
 			sendDatagram(passthroughPacket, serverConnectionSocket);
 			//we just forwarded an ack packet, go into another loop and do the transfer.
 

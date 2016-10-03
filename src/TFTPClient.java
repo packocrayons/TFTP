@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class TFTPClient extends UDPParent{
 
 	private DatagramSocket clientSocket;
+	private int requestPort;
 
 	public TFTPClient(){
 		try {
@@ -13,6 +14,7 @@ public class TFTPClient extends UDPParent{
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
+		requestPort = 69; //assume we aren't in test to start
 	}
 
 	public byte[] createRequestBlock(boolean readRequest, String filename){
@@ -42,6 +44,10 @@ public class TFTPClient extends UDPParent{
 		TFTPClient client = new TFTPClient();
 		client.promptRequest();//a gui here for making read/write requests
 		client.prompt();
+		if (client.getTestMode) {
+			client.requestPort = 23; //send requests to the intermediate server instead
+			new Thread(new ErrorSim()).start(); //we're in test mode - this is the only place we know that 
+		}
 		if (client.getReadRequest()==true){//read req.
 			String filename=client.getReadFileName(); /*= filename from gui*/
 

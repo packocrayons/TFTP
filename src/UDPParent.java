@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 public class UDPParent { //this class has the majority of the methods for actually working with UDP packets, the client, server (and maybe error sim) will extend these
 	
 	private boolean verbose;
+	private boolean testMode;
 	private static JTextArea textArea;
 	protected InetAddress IPAddress;
 	private boolean readRequest,writeRequest=false;
@@ -28,6 +29,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 
 	public UDPParent(){
 		verbose = false;
+		testMode = false;
 		try {
 			IPAddress = InetAddress.getLocalHost(); //Just for now, all the code is running on the same physical address.
 		} catch (UnknownHostException e) {
@@ -103,7 +105,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 	
 	public DatagramPacket receiveDatagram(DatagramSocket socketToUse){
 		//waits (currently indefinitely) to receive a packet on the specified socket
-		byte[] buffer = new byte[100];
+		byte[] buffer = new byte[516];
 		DatagramPacket p = new DatagramPacket(buffer, buffer.length);
 		try {
 			socketToUse.receive(p);
@@ -152,7 +154,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 					setVerbosity(false);
 				}
 				if(selectedValue2 == "Test"){
-						//Do something
+						testMode = true;
 				}
 				else{//Running in Normal mode
 					//do something 
@@ -255,6 +257,10 @@ public class UDPParent { //this class has the majority of the methods for actual
 		
 	}//promptRequest
 	
+
+	/******************
+		GET AND SET FUNCTIONS
+	******************/
 	public String getReadFileName(){
 		return readFileName;
 	}
@@ -277,6 +283,10 @@ public class UDPParent { //this class has the majority of the methods for actual
 
 	public void setReadRequest(boolean readRequest) {
 		this.readRequest = readRequest;
+	}
+
+	public boolean getTestMode(){
+		return testMode;
 	}
 
 

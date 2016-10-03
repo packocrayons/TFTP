@@ -15,7 +15,6 @@ public class TFTPServer extends UDPParent{ //While this class is the main class,
 			try {
 				requestListenerSocket.setSoTimeout(2000);
 			} catch (SocketException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} //this socket times out after 2 seconds to see if we should shut down
 	}
