@@ -44,7 +44,7 @@ public class TFTPClient extends UDPParent{
 		TFTPClient client = new TFTPClient();
 		client.promptRequest();//a gui here for making read/write requests
 		client.prompt();
-		if (client.getTestMode) {
+		if (client.getTestMode()) {
 			client.requestPort = 23; //send requests to the intermediate server instead
 			new Thread(new ErrorSim()).start(); //we're in test mode - this is the only place we know that so this is where we spawn it
 		}
