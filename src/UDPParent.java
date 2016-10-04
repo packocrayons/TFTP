@@ -204,17 +204,19 @@ public class UDPParent { //this class has the majority of the methods for actual
 		String data = new String(buf);
 		System.out.println("Data as a string: " + data);
 	}
+
+
 	public byte[] readFile(String file){//Param:input file name 
 		try {
 			in = new BufferedInputStream(new FileInputStream(file));
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println("error");
+			e.printStackTrace();
 		} 
 		byte[] byteFile = new byte[512];
 		try {
-			while(in.read(byteFile, 0, 512) != -1){
-			}
+			in.read(byteFile, 0, 512)
 		} 
 		catch (IOException e) {
 			System.out.println("error");
