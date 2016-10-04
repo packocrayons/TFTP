@@ -69,14 +69,14 @@ public class TFTPClient extends UDPParent{
 			if (!client.validateDataPacket(serverReceivedPacket.getData(), 0)) return; // breaks if it's not valid //do this one more time after the for loop for the packet that's < 512 bytes
 			client.writeFile(filename, serverReceivedPacket.getData());
 		} else { //write request
-			String filename=client.getReadFileName(); /*= filename from gui*/
+			String filename=client.getWriteFileName(); /*= filename from gui*/
 			byte[] data = client.createRequestBlock(false, filename);
 			DatagramPacket dataPacket, ackPacket;
 			int blockNum = 0;
 			dataPacket = client.generateDatagram(data, client.IPAddress, 23); //send to the intermediate host (we think it's the server)
 
 			client.sendDatagram(dataPacket, client.clientSocket); //send the datagram over our socket
-			data= client.readFile(client.getReadFileName());//
+			data = client.readFile(client.getWriteFileName());//
 			ackPacket = client.receiveDatagram(client.clientSocket); //wait for the server to ack this request
 			if (!client.validateACKPacket(ackPacket.getData(), 0)){
 				return; //ITERATION2
@@ -114,3 +114,4 @@ public class TFTPClient extends UDPParent{
 		}
 	}
 }
+
