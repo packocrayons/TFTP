@@ -1,5 +1,7 @@
 import java.net.*;
 import java.awt.List; 
+import java.util.ArrayList;
+
 
 public class TFTPClient extends UDPParent{
 
@@ -14,7 +16,7 @@ public class TFTPClient extends UDPParent{
 	}
 
 	public byte[] createRequestBlock(boolean readRequest, String filename){
-		List<byte> returnArray = new ArrayList<byte>();
+		List<> returnArray = new ArrayList<byte>();
 		returnArray.add(0);
 		if (readRequest){
 			returnArray.add(2);
@@ -47,39 +49,44 @@ public class TFTPClient extends UDPParent{
 			client.writeFile(filename, serverReceivedPacket.getData());
 		} else { //write request
 			String filename=client.getReadFileName(); /*= filename from gui*/
-			byte[] data = client.generateRequestBlock(false, filename);
+			byte[] data = client.createRequestBlock(false, filename);
 			DatagramPacket dataPacket, ackPacket;
+			int blockNum = 0;
 			dataPacket = client.generateDatagram(data, client.IPAddress, 23); //send to the intermediate host (we think it's the server)
-			client.sendDatagram(dataPacket, clientSocket); //send the datagram over our socket
+			client.sendDatagram(dataPacket, client.clientSocket); //send the datagram over our socket
 			//data[] = fetch512Bytes //SURVESH/ADAM - this is where your code will be called
-			ackPacket = receiveDatagram(clientSocket); //wait for the server to ack this request
-			if (!client.validateACKPacket(ackPacket.getBytes(), 0)) return; //ITERATION2
+			ackPacket = client.receiveDatagram(client.clientSocket); //wait for the server to ack this request
+			if (!client.validateACKPacket(ackPacket.getData(), blockNum)) return; //ITERATION2
 
-			//data[] = readfile //SURVESH/ADAM syntax here, not sure if the function call is complete yet
-			for (int blockNum = 1; data.length > 512, i++){ /*while data[].length is greater than 512*/
+			int serverPort = ackPacket.getPort();
+
+			//data[] = readfile //SURVESH/ADAM syntax here, not sure if the function call is complete yet. use filename as filename
+
+			for (blockNum = 1; data.length > 512; blockNum++){ /*while data[].length is greater than 512*/
 				
-				data = generateDataBlock(data, i); //create the block with the block number
-				dataPacket = generateDatagram(data, IPAddress, clientPort); //generate the datagram
-				if v(){
-					UDPParent.print("Data packet generated");
+				data = client.generateDataBlock(data, blockNum); //create the block with the block number
+				dataPacket = client.generateDatagram(data, client.IPAddress, serverPort); //generate the datagram
+				if (client.v()){
+					client.print("Data packet generated");
 					UDPParent.printDatagram(dataPacket);
 				}
-				sendDatagram(dataPacket, transferSocket);
+				client.sendDatagram(dataPacket, client.clientSocket);
 
-				ackPacket = receiveDatagram(transferSocket); //wait for the ACK packet
-				if (!validateACKPacket(ackPacket.getData(), blockNum)) return; //ACK was invalid - do something here in iteration 2 
+				ackPacket = client.receiveDatagram(client.clientSocket); //wait for the ACK packet
+				if (!client.validateACKPacket(ackPacket.getData(), blockNum)) return; //ACK was invalid - do something here in iteration 2 
+				//data[] = readFile //SURVESH/ADAM here too. filename is the file name
 			}
 
-			data = generateDataBlock(data, i); //create the block with the block number
-			dataPacket = generateDatagram(data, IPAddress, clientPort); //generate the datagram
-			if v(){
-				UDPParent.print("Data packet generated");
+			data = client.generateDataBlock(data, blockNum); //create the block with the block number
+			dataPacket = client.generateDatagram(data, client.IPAddress, serverPort); //generate the datagram
+			if (client.v()){
+				client.print("Data packet generated");
 				UDPParent.printDatagram(dataPacket);										//Do everything one more time after the byte array < 512 bytes
 			}
-			sendDatagram(dataPacket, transferSocket);
+			client.sendDatagram(dataPacket, client.clientSocket);
 
-			ackPacket = receiveDatagram(transferSocket); //wait for the ACK packet
-			if (!validateACKPacket(ackPacket.getData(), blockNum)) return; //ACK was invalid - do something here in iteration 2 
+			ackPacket = client.receiveDatagram(client.clientSocket); //wait for the ACK packet
+			if (!client.validateACKPacket(ackPacket.getData(), blockNum)) return; //ACK was invalid - do something here in iteration 2 
 		}
 	}
 }

@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.awt.*;
 import javax.swing.*;
+import java.lang.*;
 import java.io.BufferedOutputStream;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -39,19 +40,29 @@ public class UDPParent { //this class has the majority of the methods for actual
 		verbose=verb;
 	}
 
+	public static byte[] intToByteArray(int a)
+	{
+		byte[] ret = new byte[4];
+		ret[0] = (byte) (a & 0xFF);   
+		ret[1] = (byte) ((a >> 8) & 0xFF);   
+		ret[2] = (byte) ((a >> 16) & 0xFF);   
+		ret[3] = (byte) ((a >> 24) & 0xFF);
+		return ret;
+	}
+
 	public byte[] generateDataBlock(byte[] data, int blockNumber){
-		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
+		byte[] blockNum = intToByteArray(blockNumber); //turn the int into a big endian byte array
 		byte[] dataBlock = new byte[data.length + blockNum.length + 2];
 		dataBlock[0] = 0;
 		dataBlock[1] = 3; //03 means data
-		System.arrayCopy(blockNum, 2, dataBlock, 2, blockNum.length - 2);
-		System.arrayCopy(data, 0, dataBlock, 4, dataBlock.length); //copy the arrays into one big array
+		System.arraycopy(blockNum, 2, dataBlock, 2, blockNum.length - 2);
+		System.arraycopy(data, 0, dataBlock, 4, dataBlock.length); //copy the arrays into one big array
 		return dataBlock;
 	}
 
 
 	public DatagramPacket generateAckDatagram(int portNumber, int blockNumber){
-		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
+		byte[] blockNum = intToByteArray(blockNumber); //turn the int into a big endian byte array
 
 		byte[] response = new byte[4];
 
@@ -165,13 +176,13 @@ public class UDPParent { //this class has the majority of the methods for actual
 	}
 
 	public boolean validateACKPacket(byte[] byteArray, int blockNumber){
-		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
+		byte[] blockNum = intToByteArray(blockNumber); //turn the int into a big endian byte array
 		if (byteArray[0] == 0 && byteArray[1] == 1 && byteArray[2] == blockNum[2] && byteArray[3] == blockNum[3]) return true;
 		return false;
 	}
 
 	public boolean validateDataPacket(byte[] byteArray, int blockNumber){
-		byte[] blockNum = new ByteBuffer.allocate(4).putInt(blockNumber).order(BIG_ENDIAN).array(); //turn the int into a big endian byte array
+		byte[] blockNum = intToByteArray(blockNumber); //turn the int into a big endian byte array
 		if (byteArray[0] == 0 && byteArray[1] == 3 && byteArray[2] == blockNum[2] && byteArray[3] == blockNum[3]){
 		return true;//data
 		}
