@@ -43,7 +43,6 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 
 			for (int blockNum = 1; data.length > 512, i++){ /*while data[].length is greater than 512*/
 				
-				//data[] = fetch512Bytes //SURVESH/ADAM same thing here
 				data = generateDataBlock(data, i); //create the block with the block number
 				dataPacket = generateDatagram(data, IPAddress, clientPort); //generate the datagram
 				if v(){
@@ -54,6 +53,7 @@ public class TFTPTransferHandler extends UDPParent implements Runnable{
 
 				ackPacket = receiveDatagram(transferSocket); //wait for the ACK packet
 				if (!validateACKPacket(ackPacket.getData(), blockNum)) return; //ACK was invalid - do something here in iteration 2 
+				//data[] = fetch512Bytes //SURVESH/ADAM same thing here
 			}
 
 			data = generateDataBlock(data, i); //create the block with the block number
