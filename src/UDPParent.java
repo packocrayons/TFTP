@@ -235,6 +235,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		} 
 		catch (FileNotFoundException e) {
 			System.out.println("error");
+			e.printStackTrace();
 		}
 		
 		try {
@@ -242,6 +243,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		}
 		catch (IOException e) {
 			System.out.println("error");
+			e.printStackTrace();	
 		}
 		
 	}
@@ -249,19 +251,16 @@ public class UDPParent { //this class has the majority of the methods for actual
 	
 	public void promptRequest(){
 		
-				Object[] choices = {"Read Request","Write Request"};
-				
-				Object selectedValue = JOptionPane.showInputDialog(null,"Select one","input",JOptionPane.INFORMATION_MESSAGE,null,choices,choices[0]);	
-				if(selectedValue == "Read Request"){
-					readFileName = JOptionPane.showInputDialog("Please input a filename");
-					setReadRequest(true);
-				}
-				else{//write request
-					writeFileName= JOptionPane.showInputDialog("Please input a filename");
-					setWriteRequest(true);
-				}
-		
-		
+		Object[] choices = {"Read Request","Write Request"};
+		Object selectedValue = JOptionPane.showInputDialog(null,"Select one","input",JOptionPane.INFORMATION_MESSAGE,null,choices,choices[0]);	
+		if(selectedValue == "Read Request"){
+			readFileName = JOptionPane.showInputDialog("Please input a filename");
+			setReadRequest(true);
+		}
+		else{//write request
+			writeFileName= JOptionPane.showInputDialog("Please input a filename");
+			setWriteRequest(true);
+		}
 	}//promptRequest
 	
 
@@ -295,6 +294,4 @@ public class UDPParent { //this class has the majority of the methods for actual
 	public boolean getTestMode(){
 		return testMode;
 	}
-
-
 }
