@@ -16,7 +16,7 @@ public class TFTPClient extends UDPParent{
 	}
 
 	public byte[] createRequestBlock(boolean readRequest, String filename){
-		List<> returnArray = new ArrayList<byte>();
+		ArrayList<byte> returnArray = new ArrayList<>();
 		returnArray.add(0);
 		if (readRequest){
 			returnArray.add(2);
