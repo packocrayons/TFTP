@@ -62,7 +62,6 @@ public class UDPParent { //this class has the majority of the methods for actual
 		return dataBlock;
 	}
 
-
 	public DatagramPacket generateAckDatagram(int portNumber, int blockNumber){
 		byte[] blockNum = intToByteArray(blockNumber); //turn the int into a big endian byte array
 
@@ -83,7 +82,6 @@ public class UDPParent { //this class has the majority of the methods for actual
 		}
 		return packetToSend;
 	}
-
 
 	public DatagramPacket generateDatagram(byte[] byteArray, InetAddress IPaddress, int portNumber){ 
 		//this method really doesn't do much, however it makes code readable and may do more later
@@ -140,6 +138,7 @@ public class UDPParent { //this class has the majority of the methods for actual
 		textArea.setEditable(false);
 		
 	}
+	
 	public void prompt(){
 		//quiet,verbose
 		SwingUtilities.invokeLater(new Runnable() {//being executed in a separate thread, therefore doesn't interfere
@@ -163,9 +162,6 @@ public class UDPParent { //this class has the majority of the methods for actual
 			}//run
 		 });//invokeLater
 	}//prompt
-	
-	
-
 
 	public boolean validateRequestPacket(byte[] byteArray){
 		if(byteArray[0] != 0) return false;
