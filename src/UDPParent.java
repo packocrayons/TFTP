@@ -7,6 +7,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.lang.*;
 import java.io.BufferedOutputStream;
+import java.util.Arrays;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -216,10 +217,14 @@ public class UDPParent { //this class has the majority of the methods for actual
 		} 
 		byte[] byteFile = new byte[512];
 		try {
-			in.read(byteFile, 0, 512)
+			if (in.read(byteFile, 0, 512) == -1){
+				//we reached the end of the file on the last read, and have to send a zero byte packet to terminate the read
+				Arrays.fill(byteFile, (byte)0); //blank the array - it should be already from the declaration but we don't know what in.read did to it
+			}
 		} 
 		catch (IOException e) {
 			System.out.println("error");
+			e.printStackTrace();
 		}
 		return byteFile;
 	}
