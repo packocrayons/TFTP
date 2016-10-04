@@ -16,15 +16,26 @@ public class TFTPClient extends UDPParent{
 	}
 
 	public byte[] createRequestBlock(boolean readRequest, String filename){
-		ArrayList<byte> returnArray = new ArrayList<>();
-		returnArray.add(0);
+		ArrayList<Byte> returnArray = new ArrayList<>();
+		returnArray.add(returnArray.size(), (byte)0);
 		if (readRequest){
-			returnArray.add(2);
+			returnArray.add( (byte)2);
+		} else returnArray.add((byte)1);
+		byte[] temp = filename.getBytes();
+		for (int i = 0; i < temp.length; i++){
+			returnArray.add(temp[i]);
 		}
-		returnArray.add(filename.getBytes());
-		returnArray.add(0);
-		returnArray.add("octet".getBytes()); //it doesn't matter for this course, therefore we just make an assumption, this can easily be changed by passing it to the function
-		returnArray.add(0);
+		returnArray.add((byte)0);
+		temp = "octet".getBytes();
+		for (int i = 0; i < temp.length; i++){
+			returnArray.add(temp[i]);
+		}
+		returnArray.add((byte)0);
+		byte[] ret = new byte[(returnArray.size())];
+		for (int i = 0; i < ret.length; ++i){
+			ret[i] = returnArray.get(i);
+		}
+		return ret;
 	}
 
 	public static void main(String[] args){
@@ -53,16 +64,17 @@ public class TFTPClient extends UDPParent{
 			DatagramPacket dataPacket, ackPacket;
 			int blockNum = 0;
 			dataPacket = client.generateDatagram(data, client.IPAddress, 23); //send to the intermediate host (we think it's the server)
-			client.sendDatagram(dataPacket, clientSocket); //send the datagram over our socket
+
+			client.sendDatagram(dataPacket, client.clientSocket); //send the datagram over our socket
 			data= client.readFile(client.getReadFileName());//
-			ackPacket = receiveDatagram(clientSocket); //wait for the server to ack this request
-			if (!client.validateACKPacket(ackPacket.getBytes(), 0)) return; //ITERATION2
+			ackPacket = client.receiveDatagram(client.clientSocket); //wait for the server to ack this request
+			if (!client.validateACKPacket(ackPacket.getData(), 0)) return; //ITERATION2
 
 			int serverPort = ackPacket.getPort();
 
 			//Sorry don't know why that was in there twice
 
-			for (int blockNum = 1; data.length > 512, i++){ /*while data[].length is greater than 512*/
+			for (blockNum = 1; data.length > 512; blockNum++){ /*while data[].length is greater than 512*/
 				
 				data = client.generateDataBlock(data, blockNum); //create the block with the block number
 				dataPacket = client.generateDatagram(data, client.IPAddress, serverPort); //generate the datagram
@@ -74,7 +86,7 @@ public class TFTPClient extends UDPParent{
 
 				ackPacket = client.receiveDatagram(client.clientSocket); //wait for the ACK packet
 				if (!client.validateACKPacket(ackPacket.getData(), blockNum)) return; //ACK was invalid - do something here in iteration 2 
-				//data[] = readFile //SURVESH/ADAM here too. filename is the file name
+				data= client.readFile(client.getReadFileName());//
 			}
 
 			data = client.generateDataBlock(data, blockNum); //create the block with the block number
