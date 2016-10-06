@@ -36,8 +36,13 @@ public class ErrorSim extends UDPParent implements Runnable{
 			//The only reason for this loop is because the packets that the client sent are going to a different port than the ack packet from the client
 			while (true){ //no condition - this loop will be broken in the catch block of a socket timeout
 				passthroughPacket = receiveDatagram(serverConnectionSocket); //the server knows to send here because that's where we sent the 'request' from
+				int serverPort = passthroughPacket.getPort();
 				passthroughPacket = generateDatagram(passthroughPacket.getData(), IPAddress, clientPort); //forward the packet to the client
-
+				sendDatagram(passthroughPacket, clientReplySocket);//the client will now send to whatever port this is
+				
+				passthroughPacket = receiveDatagram(clientReplySocket);
+				passthroughPacket = generateDatagram(passthroughPacket.getData(), IPAddress, serverPort);
+				sendDatagram(passthroughPacket, serverConnectionSocket);
 			}
 		}
 	}
